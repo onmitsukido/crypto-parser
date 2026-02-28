@@ -1,6 +1,9 @@
 from typing import Dict, List
 from price_fetcher import fetch_prices
 from cache_client import get_price, set_price
+from logger import get_logger
+
+logger = get_logger(__name__)
 
 async def get_prices_with_cache(coins: List[str], currencies: List[str]) -> Dict[str, Dict[str, str]]:
     all_cached = True
@@ -15,10 +18,10 @@ async def get_prices_with_cache(coins: List[str], currencies: List[str]) -> Dict
             result[coin][currency] = cached_value
 
     if all_cached:
-        print("Все данные получены из кэша")
+        logger.info(f"Все данные получены из кэша")
         return result
     else:
-        print("Запрашиваем свежие данные у CoinGecko...")
+        logger.info(f"Запрашиваем свежие данные у CoinGecko...")
 
     fresh_data: dict = await fetch_prices(coins, currencies)
 

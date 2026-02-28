@@ -1,5 +1,8 @@
 import redis.asyncio as redis
 from config import Config
+from logger import get_logger
+
+logger = get_logger(__name__)
 
 redis_client = redis.from_url(Config.REDIS_URL, decode_responses=True)
 
@@ -9,6 +12,7 @@ async def set_price(coin: str, currency: str, price: str | float | int, ttl: int
     actual_ttl = ttl if ttl is not None else Config.CACHE_TTL
 
     await redis_client.setex(key, actual_ttl, str(price))
+    logger.debug(f"Значение price:{coin}:{currency} закэшировано")
 
 async def get_price(coin: str, currency: str) -> str | None:
 

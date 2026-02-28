@@ -1,5 +1,8 @@
 import httpx
 from config import Config
+from logger import get_logger
+
+logger = get_logger(__name__)
 
 async def fetch_prices(coins: list[str], currencies: list[str]):
     
@@ -12,4 +15,5 @@ async def fetch_prices(coins: list[str], currencies: list[str]):
     async with httpx.AsyncClient() as client:
         response = await client.get(url, params=params)
         response.raise_for_status()
+        logger.debug(f"Данные из CoinGecko получены")
         return response.json()
